@@ -1,138 +1,193 @@
-// src/components/Dashboard.jsx
-
 import React, { useState, useEffect } from 'react';
-import '../styles/App.css'; // Optional styling file
-import { useNavigate } from 'react-router-dom';
+import "../styles/App.css";
+export default function Dashboard() {
+    const [sub1, setSub1] = useState("");
+    const [sub2, setSub2] = useState("");
+    const [sub3, setSub3] = useState("");
+    const [sub4, setSub4] = useState("");
+    const [sub5, setSub5] = useState("");
+    const [marks, setMarks] = useState([]);
+    const [editId, setEditId] = useState(null);
+    const [loading, setLoading] = useState(false); // Loading state
 
-const Dashboard = () => {
-  const [marks, setMarks] = useState({
-    sub1: '',
-    sub2: '',
-    sub3: '',
-    sub4: '',
-    sub5: '',
-  });
-  const [message, setMessage] = useState('');
-  const [marksList, setMarksList] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+    // Fetch marks from the backend (MySQL database)
+    const fetchMarks = async () => {
+        setLoading(true); // Set loading to true
+        try {
+            const res = await fetch("http://localhost:8001/fetch-marks");
+            if (!res.ok) throw new Error("Failed to fetch marks");
+            const data = await res.json();
+            setMarks(data.marks);
+        } catch (err) {
+            console.error("Error fetching marks:", err);
+        } finally {
+            setLoading(false); // Set loading to false
+        }
+    };
 
-  // Handle input changes dynamically
-  const handleChange = (e) => {
-    setMarks({ ...marks, [e.target.name]: e.target.value });
-  };
+    // Handle form submission (add or update marks)
+    const handleSubmitOrUpdate = async () => {
+        if (!sub1 || !sub2 || !sub3 || !sub4 || !sub5) {
+            alert("Please fill all the fields");
+            return;
+        }
 
-  // Submit the marks to the server
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+        const markData = {
+            sub1: Number(sub1),
+            sub2: Number(sub2),
+            sub3: Number(sub3),
+            sub4: Number(sub4),
+            sub5: Number(sub5),
+        };
 
-    if (Object.values(marks).some((mark) => mark === '')) {
-      setMessage('All fields are required!');
-      return;
-    }
+        try {
+            const method = editId ? "PUT" : "POST";
+            const endpoint = editId 
+                ? `http://localhost:8001/update-mark/${editId}` 
+                : "http://localhost:8001/add-mark"; // Ensure this endpoint is correct for adding marks
 
-    setLoading(true);
-    try {
-      const res = await fetch('http://localhost:8000/add-marks', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(marks),
-      });
+            const res = await fetch(endpoint, {
+                method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(markData),
+            });
 
-      if (!res.ok) {
-        throw new Error('Failed to submit marks');
-      }
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.message || "Failed to save marks");
+            }
 
-      const data = await res.json();
-      setMessage('Marks added successfully!');
-      fetchMarks(); // Fetch updated marks list
-      setMarks({
-        sub1: '',
-        sub2: '',
-        sub3: '',
-        sub4: '',
-        sub5: '',
-      }); // Reset form after submission
-    } catch (err) {
-      console.error('Error during submission:', err);
-      setMessage('Error adding marks. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+            fetchMarks(); // Refresh marks after submission
+            resetForm(); // Reset the form
+        } catch (err) {
+            console.error("Error saving marks:", err);
+            alert(err.message); // Show error message to user
+        }
+    };
 
-  // Fetch all marks to display on the page
-  const fetchMarks = async () => {
-    try {
-      const res = await fetch('http://localhost:8000/fetch-marks');
-      if (!res.ok) {
-        throw new Error('Failed to fetch marks');
-      }
-      const data = await res.json();
-      setMarksList(data.marks);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+    // Handle deleting a mark
+    const handleDelete = async (id) => {
+        if (window.confirm("Are you sure you want to delete this record?")) {
+            try {
+                const res = await fetch(`http://localhost:8001/delete-mark/${id}`, { method: "DELETE" });
+                if (!res.ok) throw new Error("Failed to delete mark");
+                fetchMarks(); // Refresh marks after deletion
+            } catch (err) {
+                console.error("Error deleting mark:", err);
+                alert(err.message); // Show error message to user
+            }
+        }
+    };
 
-  // Use useEffect to fetch marks when the component is mounted
-  useEffect(() => {
-    fetchMarks();
-  }, []);
+    // Handle editing a mark
+    const handleEdit = (mark) => {
+        setEditId(mark.id);
+        setSub1(mark.sub1);
+        setSub2(mark.sub2);
+        setSub3(mark.sub3);
+        setSub4(mark.sub4);
+        setSub5(mark.sub5);
+    };
 
-  return (
-    <div className="dashboard-container">
-      <h2 className="dashboard-title">Enter marks</h2>
+    // Reset the form
+    const resetForm = () => {
+        setEditId(null);
+        setSub1("");
+        setSub2("");
+        setSub3("");
+        setSub4("");
+        setSub5("");
+    };
 
-      {/* Display success/error messages */}
-      {message && <p className="message">{message}</p>}
+    // Fetch marks on page load
+    useEffect(() => {
+        fetchMarks();
+    }, []);
 
-      <form onSubmit={handleSubmit} className="marks-form">
-        {['sub1', 'sub2', 'sub3', 'sub4', 'sub5'].map((subject, index) => (
-          <div key={index} className="input-container">
-            <input
-              type="number"
-              name={subject}
-              placeholder={`Enter marks for Subject ${index + 1}`}
-              value={marks[subject]}
-              onChange={handleChange}
-              required
-              className="input-field"
-            />
-          </div>
-        ))}
+    return (
+        <div>
+            <h2>{editId ? "Edit Marks" : "Add Marks"}</h2>
 
-        <button type="submit" className="submit-button" disabled={loading}>
-          {loading ? 'Submitting...' : 'Submit Marks'}
-        </button>
-      </form>
+            <div>
+                <input
+                    type="number"
+                    placeholder="Subject 1"
+                    value={sub1}
+                    onChange={(e) => setSub1(e.target.value)}
+                />
+            </div>
+            <div>
+                <input
+                    type="number"
+                    placeholder="Subject 2"
+                    value={sub2}
+                    onChange={(e) => setSub2(e.target.value)}
+                />
+            </div>
+            <div>
+                <input
+                    type="number"
+                    placeholder="Subject 3"
+                    value={sub3}
+                    onChange={(e) => setSub3(e.target.value)}
+                />
+            </div>
+            <div>
+                <input
+                    type="number"
+                    placeholder="Subject 4"
+                    value={sub4}
+                    onChange={(e) => setSub4(e.target.value)}
+                />
+            </div>
+            <div>
+                <input
+                    type="number"
+                    placeholder="Subject 5"
+                    value={sub5}
+                    onChange={(e) => setSub5(e.target.value)}
+                />
+            </div>
 
-      <table>
-                <tr>
-                    <th>ID</th>
-                    <th>Subject1</th>
-                    <th>Subject2</th>
-                    <th>Subject3</th>
-                    <th>Subject4</th>
-                    <th>Subject5</th>
-                </tr>
-                {mark.map((key,index)=>(
-                    <tr key={index}>
-                        <td>{key.id}</td>
-                        <td>{key.sub1}</td>
-                        <td>{key.sub2}</td>
-                        <td>{key.sub3}</td>
-                        <td>{key.sub4}</td>
-                        <td>{key.sub5}</td>
-                        <td><button>Edit</button></td>
-                        <td><button>Delete</button></td>
-                    </tr>
-                ))}
-            </table>
-    </div>
-  );
-};
+            <button onClick={handleSubmitOrUpdate}>
+                {editId ? "Update Marks" : "Submit Marks"}
+            </button>
+            {editId && <button onClick={resetForm} style={{ marginLeft: "10px" }}>Cancel</button>}
 
-export default Dashboard;
+            <h3>Mark Table</h3>
+            {loading ? (
+                <p>Loading marks...</p> // Loading message
+            ) : (
+                <table border="1" cellPadding="8" style={{ marginTop: "20px" }}>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Subject 1</th>
+                            <th>Subject 2</th>
+                            <th>Subject 3</th>
+                            <th>Subject 4</th>
+                            <th>Subject 5</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {marks.map((mark) => (
+                            <tr key={mark.id}>
+                                <td>{mark.id}</td>
+                                <td>{mark.sub1}</td>
+                                <td>{mark.sub2}</td>
+                                <td>{mark.sub3}</td>
+                                <td>{mark.sub4}</td>
+                                <td>{mark.sub5}</td>
+                                <td>
+                                    <button onClick={() => handleEdit(mark)}>Edit</button>
+                                    <button onClick={() => handleDelete(mark.id)} style={{ marginLeft: "10px" }}>Delete</button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )}
+        </div>
+    );
+}

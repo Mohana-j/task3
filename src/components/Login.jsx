@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/AuthStore"; // Correct path to your AuthStore
+import "../styles/App.css";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -42,7 +43,7 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <h2 className="login-title">Student Login</h2>
+      <h2 className="login-title">STUDENT LOGIN</h2>
 
       {error && <p className="error-message">{error}</p>}
 

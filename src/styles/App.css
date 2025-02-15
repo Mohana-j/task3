@@ -1,168 +1,325 @@
-/* General Styles */
-body {
-  font-family: "Poppins", sans-serif;
-  background: linear-gradient(135deg, #6e8efb, #a777e3);
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 0;
-}
-
-/* Centered container for both Login & Dashboard */
-/* Login.css */
-/* src/components/Login.css */
-
 /* Global Styles */
 * {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 body {
   font-family: 'Arial', sans-serif;
-  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  background-color: #f4f4f4; /* Light Gray background */
+  color: #333;
+  line-height: 1.6;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  flex-direction: column;
+  padding: 0 20px;
 }
 
-.login-container {
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  width: 350px;
-  padding: 40px;
+/* Center the content */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white; /* White background for sections */
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Title and Subtitle */
+h2, h3 {
+  font-weight: 600;
+  color: #6A5ACD; /* Slate Blue */
+  margin-bottom: 15px;
   text-align: center;
 }
 
-.login-title {
+/* Add Marks Heading */
+/* Add Marks and Marks List Heading */
+h2.dashboard-title, h3 {
+  text-align: center;
+  font-size: 32px; /* Unified font size */
+  color: #6A5ACD; /* Slate Blue */
+  margin-bottom: 20px;
+  font-weight: 600;
+  text-transform: uppercase; /* Fully capitalized */
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+
+/* 
+h3 {
+  text-align: center;
   font-size: 28px;
-  color: #333;
-  margin-bottom: 20px;
+  color: #2F4F4F; 
+  margin-top: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
+} */
+
+/* Button Styles */
+button {
+  background-color: #6A5ACD; /* Slate Blue */
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.input-container {
-  margin-bottom: 20px;
-  text-align: left;
+button:hover {
+  background-color: #4b3b8c; /* Darker Slate Blue on hover */
+  transform: scale(1.05);
 }
 
-.input-field {
-  width: 100%;
+button:disabled {
+  background-color: #bbb;
+  cursor: not-allowed;
+}
+
+/* Input Field Styles */
+input[type="text"], input[type="password"], input[type="number"] {
   padding: 12px;
-  font-size: 14px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  background-color: #f9f9f9;
-  margin-top: 8px;
+  font-size: 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 600px;
+  transition: border-color 0.3s ease, transform 0.2s ease;
 }
 
-.input-field:focus {
-  border-color: #6e8efb;
+input[type="text"]:focus, input[type="password"]:focus, input[type="number"]:focus {
+  border-color: #6A5ACD; /* Slate Blue */
   outline: none;
-  box-shadow: 0 0 5px rgba(110, 142, 251, 0.3);
+  transform: scale(1.02);
+}
+
+input[type="text"], input[type="password"], input[type="number"]::placeholder {
+  color: #aaa;
+}
+
+/* Error Message */
+.error-message {
+  color: #e74c3c; /* Red for errors */
+  margin-bottom: 20px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* Login Styles */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  box-shadow: 0px 6px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  width: 100%;
+  max-width: 500px;
+  padding: 40px;
+  animation: slideIn 0.6s ease-out;
+  margin-top: 60px;
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.login-title {
+  font-size: 32px;
+  color: #6A5ACD; /* Slate Blue */
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.login-form {
+  width: 100%;
 }
 
 .submit-button {
   width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  background: linear-gradient(90deg, #6e8efb, #a777e3);
+  background-color: #6A5ACD; /* Slate Blue */
   color: white;
+  font-size: 18px;
+  padding: 15px 0;
+  border-radius: 8px;
   border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
 .submit-button:hover {
-  background: linear-gradient(90deg, #5c7cfa, #965fd4);
-  transform: scale(1.03);
+  background-color: #4b3b8c;
+  transform: scale(1.05);
 }
 
-.submit-button:disabled {
-  background: #b3c7f9;
-  cursor: not-allowed;
-}
-
-.error-message {
-  color: red;
-  font-size: 14px;
-  margin-bottom: 20px;
-}
-
-
-/* Success Message */
-.message {
-  color: green;
-  font-size: 14px;
-  margin-bottom: 10px;
-}
-
-/* Dashboard - Marks Form */
 /* Dashboard Styles */
 .dashboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
   width: 100%;
-  max-width: 800px;
-  margin: 50px auto;
-  background-color: #fff;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .dashboard-title {
   text-align: center;
-  font-size: 28px;
+  font-size: 30px;
+  color: #6A5ACD;
   margin-bottom: 20px;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
-.marks-form {
-  margin-bottom: 30px;
+/* Add Marks Heading */
+h2.dashboard-title {
+  text-align: center;
+  font-size: 32px;
+  color: #6A5ACD; /* Slate Blue */
+  margin-bottom: 20px;
+  font-weight: 600;
+  text-transform: uppercase; /* Changed from capitalize to uppercase */
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 }
 
-.input-container {
-  margin-bottom: 15px;
-}
-
-.input-field {
+.table-container {
   width: 100%;
-  padding: 15px;
-  font-size: 14px;
-  border-radius: 8px;
+  margin-top: 30px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+th, td {
+  padding: 12px;
+  text-align: center;
   border: 1px solid #ddd;
 }
 
-.submit-button {
-  width: 100%;
-  padding: 12px;
-  background-color: #4caf50;
+th {
+  background-color: #6A5ACD; /* Slate Blue */
+  color: white;
+  font-size: 18px;
+}
+
+tr:nth-child(even) {
+  background-color: #f4f4f4; /* Light Gray */
+}
+
+tr:hover {
+  background-color: #A9A9A9; /* Gray on hover */
+  transform: scale(1.02);
+  transition: transform 0.2s ease;
+}
+
+td button {
+  background-color: #2F4F4F; /* Dark Slate Gray */
+  margin: 0 10px;
+  font-size: 14px;
+  padding: 6px 14px;
+  border-radius: 5px;
   color: white;
   border: none;
-  border-radius: 6px;
   cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.submit-button:disabled {
-  background-color: #aaa;
+td button:hover {
+  background-color: #2c3e50;
+  transform: scale(1.05);
 }
 
-.message {
-  font-size: 16px;
-  text-align: center;
-  margin-bottom: 20px;
-  color: green;
+td button:disabled {
+  background-color: #bbb;
+  cursor: not-allowed;
 }
 
-.marks-list {
+.loading-message {
+  font-size: 18px;
+  color: #666;
+  font-style: italic;
   margin-top: 20px;
 }
 
-.marks-entry {
-  background-color: #f9f9f9;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 6px;
+form input {
+  max-width: 400px;
+  margin: 10px 0;
 }
+
+form button {
+  width: 100%;
+  background-color: #6A5ACD;
+  color: white;
+  padding: 12px 0;
+  font-size: 18px;
+  border-radius: 8px;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+form button:hover {
+  background-color: #4b3b8c;
+  transform: scale(1.05);
+}
+
+form .cancel-button {
+  background-color: #2F4F4F;
+  margin-top: 10px;
+  padding: 12px 0;
+  width: 100%;
+  border-radius: 8px;
+  font-size: 18px;
+  border: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+form .cancel-button:hover {
+  background-color: #2c3e50;
+  transform: scale(1.05);
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+  .login-container, .dashboard-container {
+    padding: 20px;
+  }
+
+  .table-container {
+    width: 100%;
+  }
+
+  input[type="text"], input[type="password"], input[type="number"] {
+    width: 100%;
+  }
+
+  button {
+    width: 100%;
+  }
+} 
